@@ -25,10 +25,6 @@
 #include "u_ether.h"
 #include "rndis.h"
 
-static bool rndis_multipacket_dl_disable;
-module_param(rndis_multipacket_dl_disable, bool, S_IRUGO|S_IWUSR);
-MODULE_PARM_DESC(rndis_multipacket_dl_disable,
-	"Disable RNDIS Multi-packet support in DownLink");
 
 /*
  * This function is an RNDIS Ethernet port -- a Microsoft protocol that's
@@ -483,8 +479,6 @@ static void rndis_command_complete(struct usb_ep *ep, struct usb_request *req)
 				__func__, buf->MaxTransferSize,
 				rndis->port.multi_pkt_xfer ? "enabled" :
 							    "disabled");
-		if (rndis_multipacket_dl_disable)
-			rndis->port.multi_pkt_xfer = 0;
 	}
 //	spin_unlock(&dev->lock);
 }
@@ -850,6 +844,7 @@ rndis_unbind(struct usb_configuration *c, struct usb_function *f)
 
 	rndis_deregister(rndis->config);
 	rndis_exit();
+	rndis_string_defs[0].id = 0;
 
 	if (gadget_is_superspeed(c->cdev->gadget))
 		usb_free_descriptors(f->ss_descriptors);

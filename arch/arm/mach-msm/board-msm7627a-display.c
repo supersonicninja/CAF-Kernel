@@ -594,9 +594,12 @@ static int evb_backlight_control(int level, int mode)
 
 	int i = 0;
 	int remainder, ret = 0;
+	u32 socinfo = socinfo_get_version();
 
 	/* device address byte = 0x72 */
 	if (!mode) {
+		if (socinfo != 0x10000 && level == 0)
+			level = 10;
 		gpio_set_value(96, 0);
 		udelay(67);
 		gpio_set_value(96, 1);
@@ -1227,9 +1230,9 @@ static int mipi_dsi_panel_qrd3_power(int on)
 		}
 		/*Toggle Backlight GPIO*/
 		gpio_set_value_cansleep(GPIO_QRD3_LCD_BACKLIGHT_EN, 1);
-		udelay(100);
+		udelay(190);
 		gpio_set_value_cansleep(GPIO_QRD3_LCD_BACKLIGHT_EN, 0);
-		udelay(430);
+		udelay(286);
 		gpio_set_value_cansleep(GPIO_QRD3_LCD_BACKLIGHT_EN, 1);
 		/* 1 wire mode starts from this low to high transition */
 		udelay(50);
@@ -1368,7 +1371,7 @@ void __init msm_fb_add_devices(void)
 				ARRAY_SIZE(evb_fb_devices));
 	} else if (machine_is_msm7627a_qrd3() || machine_is_msm8625_qrd7()) {
 		sku3_lcdc_lcd_camera_power_init();
-		mdp_pdata.cont_splash_enabled = 0x1;
+		mdp_pdata.cont_splash_enabled = 0x0;
 		platform_add_devices(qrd3_fb_devices,
 						ARRAY_SIZE(qrd3_fb_devices));
 	} else {

@@ -13,7 +13,7 @@
 #ifndef _VCD_CORE_H_
 #define _VCD_CORE_H_
 
-#include <linux/msm_ion.h>
+#include <linux/ion.h>
 #include <media/msm/vcd_api.h>
 #include "vcd_ddl_api.h"
 
@@ -25,7 +25,7 @@
 
 #define VCD_MIN_PERF_LEVEL                   37900
 
-#define VCD_DRIVER_CLIENTS_MAX              6
+#define VCD_DRIVER_INSTANCE_MAX              4
 
 #define VCD_MAX_CLIENT_TRANSACTIONS          32
 
@@ -126,7 +126,7 @@ struct vcd_dev_ctxt {
 
 	struct vcd_init_config config;
 
-	u32 driver_ids[VCD_DRIVER_CLIENTS_MAX];
+	u32 driver_ids[VCD_DRIVER_INSTANCE_MAX];
 	u32 refs;
 	u8 *device_base_addr;
 	void *hw_timer_handle;

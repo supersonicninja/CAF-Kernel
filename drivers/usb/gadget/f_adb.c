@@ -28,7 +28,7 @@
 #include <linux/miscdevice.h>
 
 #define ADB_BULK_BUFFER_SIZE           4096
-#define DEBUG 1
+
 /* number of tx requests to allocate */
 #define TX_REQ_MAX 4
 
@@ -420,10 +420,7 @@ static ssize_t adb_write(struct file *fp, const char __user *buf,
 
 static int adb_open(struct inode *ip, struct file *fp)
 {
-	static DEFINE_RATELIMIT_STATE(rl, 10*HZ, 1);
-
-	if (__ratelimit(&rl))
-		pr_info("adb_open\n");
+	pr_info("adb_open\n");
 	if (!_adb_dev)
 		return -ENODEV;
 
@@ -446,10 +443,7 @@ static int adb_open(struct inode *ip, struct file *fp)
 
 static int adb_release(struct inode *ip, struct file *fp)
 {
-	static DEFINE_RATELIMIT_STATE(rl, 10*HZ, 1);
-
-	if (__ratelimit(&rl))
-		pr_info("adb_release\n");
+	pr_info("adb_release\n");
 
 	/*
 	 * ADB daemon closes the device file after I/O error.  The
@@ -612,7 +606,7 @@ static int adb_bind_config(struct usb_configuration *c)
 {
 	struct adb_dev *dev = _adb_dev;
 
-	pr_debug("adb_bind_config\n");
+	printk(KERN_INFO "adb_bind_config\n");
 
 	dev->cdev = c->cdev;
 	dev->function.name = "adb";

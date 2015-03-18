@@ -539,6 +539,7 @@ void mdp_dma_vsync_ctrl(int enable)
 		mdp_enable_irq(MDP_VSYNC_TERM);
 		spin_unlock_irqrestore(&mdp_spin_lock, flag);
 	}
+
 	if (vsync_cntrl.vsync_irq_enabled &&
 		atomic_read(&vsync_cntrl.suspend) == 0)
 		atomic_set(&vsync_cntrl.vsync_resume, 1);
